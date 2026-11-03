@@ -1,0 +1,89 @@
+# Program code:
+grid = [
+    ['S', '.', '.', '#', '.'],
+    ['.', '#', '.', '#', '.'],
+    ['.', '#', '.', '.', '.'],
+    ['.', '.', '#', '#', '.'],
+    ['#', '.', '.', '.', 'G']
+]
+
+rows = len(grid)
+cols = len(grid[0])
+
+start = (0, 0)
+goal = (4, 4)
+
+# Internal state
+current_position = start
+visited = set()
+path = []
+
+# Possible movements
+moves = [
+    (-1, 0),  # Up
+    (1, 0),   # Down
+    (0, -1),  # Left
+    (0, 1)    # Right
+]
+
+
+def model_based_agent(position):
+    """
+    Model-based agent maintains internal information
+    about visited cells and obstacles.
+    """
+
+    visited.add(position)
+    path.append(position)
+
+    if position == goal:
+        return None
+
+    # Check possible movements
+    for dr, dc in moves:
+        new_row = position[0] + dr
+        new_col = position[1] + dc
+
+        # Check boundaries
+        if new_row < 0 or new_row >= rows:
+            continue
+
+        if new_col < 0 or new_col >= cols:
+            continue
+
+        new_position = (new_row, new_col)
+
+        # Check obstacle and visited cells
+        if grid[new_row][new_col] != '#' \
+                and new_position not in visited:
+            return new_position
+
+    return None
+
+
+# Navigate through the environment
+while current_position != goal:
+
+    next_position = model_based_agent(current_position)
+
+    if next_position is None:
+        print("Agent cannot reach the goal.")
+        break
+
+    current_position = next_position
+
+else:
+    path.append(goal)
+    print("Goal Reached!")
+
+# Display internal state
+print("\nInternal State:")
+print("Current Position:", current_position)
+print("Goal Position:", goal)
+print("Visited Cells:", visited)
+
+print("\nPath Followed:")
+for position in path:
+    print(position)
+
+print("\nNumber of Steps:", len(path) - 1)
