@@ -1,0 +1,22 @@
+# Simple Reflex Agent for Vacuum Cleaner World
+
+def vacuum_agent(location, status):
+    if status == "Dirty":
+        return "Suck"
+
+    elif location == "A":
+        return "Move Right"
+
+    elif location == "B":
+        return "Move Left"
+
+
+# Given environment
+location = input("Enter vacuum location (A/B): ")
+status = input("Enter room status (Clean/Dirty): ")
+
+action = vacuum_agent(location, status)
+
+print("Current Location:", location)
+print("Room Status:", status)
+print("Agent Action:", action)
