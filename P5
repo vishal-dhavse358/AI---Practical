@@ -1,0 +1,75 @@
+from collections import deque
+
+# Grid
+grid = [
+    ['S', '0', '0', 'X', '0'],
+    ['0', 'X', '0', 'X', '0'],
+    ['0', 'X', '0', '0', '0'],
+    ['0', '0', '0', 'X', 'G']
+]
+
+rows = len(grid)
+cols = len(grid[0])
+
+# Find start and goal
+for i in range(rows):
+    for j in range(cols):
+        if grid[i][j] == 'S':
+            start = (i, j)
+        elif grid[i][j] == 'G':
+            goal = (i, j)
+
+# Possible movements
+moves = [
+    (-1, 0, "UP"),
+    (1, 0, "DOWN"),
+    (0, -1, "LEFT"),
+    (0, 1, "RIGHT")
+]
+
+
+def bfs(start, goal):
+
+    queue = deque([(start, [])])
+    visited = {start}
+
+    while queue:
+
+        current, path = queue.popleft()
+
+        if current == goal:
+            return path
+
+        for dr, dc, action in moves:
+
+            nr = current[0] + dr
+            nc = current[1] + dc
+
+            if (0 <= nr < rows and
+                0 <= nc < cols and
+                grid[nr][nc] != 'X' and
+                (nr, nc) not in visited):
+
+                visited.add((nr, nc))
+
+                queue.append(
+                    (
+                        (nr, nc),
+                        path + [action]
+                    )
+                )
+
+    return None
+
+
+# Find shortest path
+path = bfs(start, goal)
+
+if path:
+
+    print("Shortest Path:")
+    print(" -> ".join(path))
+    print("Number of steps:", len(path))
+
+else:
+    print("No path found")
