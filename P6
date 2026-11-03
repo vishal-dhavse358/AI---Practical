@@ -1,0 +1,63 @@
+def get_next_states(state):
+    x, y = state
+    states = []
+
+    # Fill 4-litre jug
+    states.append(((4, y), "Fill 4L jug"))
+
+    # Fill 3-litre jug
+    states.append(((x, 3), "Fill 3L jug"))
+
+    # Empty 4-litre jug
+    states.append(((0, y), "Empty 4L jug"))
+
+    # Empty 3-litre jug
+    states.append(((x, 0), "Empty 3L jug"))
+
+    # Pour 4L jug into 3L jug
+    transfer = min(x, 3 - y)
+    states.append(((x - transfer, y + transfer),
+                   "Pour 4L -> 3L"))
+
+    # Pour 3L jug into 4L jug
+    transfer = min(y, 4 - x)
+    states.append(((x + transfer, y - transfer),
+                   "Pour 3L -> 4L"))
+
+    return states
+
+
+def dfs():
+    start = (0, 0)
+    stack = [(start, [])]
+    visited = set()
+
+    while stack:
+        state, path = stack.pop()
+
+        if state in visited:
+            continue
+
+        visited.add(state)
+
+        # Goal: exactly 2 litres in 4L jug
+        if state[0] == 2:
+            return path + [("Goal", state)]
+
+        for next_state, action in get_next_states(state):
+            if next_state not in visited:
+                stack.append(
+                    (next_state, path + [(action, next_state)])
+                )
+
+    return None
+
+
+solution = dfs()
+
+if solution:
+    print("DFS Solution:")
+    for step, state in solution:
+        print(step, "->", state)
+else:
+    print("No solution found")
